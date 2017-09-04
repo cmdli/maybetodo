@@ -1,0 +1,6 @@
+indexes:
+- kind: Task
+  ancestor: yes
+  properties:
+  - name: date
+    direction: desc

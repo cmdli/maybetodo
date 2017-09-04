@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+  <body>
+    <p>Welcome to MaybeTodo, {{ user_nickname }}!</p>
+    
+    {% for task in tasklist %}
+    <p> {{ task.key.urlsafe() }} {{ task.content }} </p>
+    {% endfor %}
+    
+    <form action="/addtask" method="post">
+      <input value="" name="content">
+      <input type="submit" value="Add task">
+    </form>
+    <a href="{{ logout_url|safe }}">Logout</a>
+  </body>
+</html>
