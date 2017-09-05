@@ -4,7 +4,12 @@
     <p>Welcome to MaybeTodo, {{ user_nickname }}!</p>
     
     {% for task in tasklist %}
-    <p> {{ task.key.urlsafe() }} {{ task.content }} </p>
+    <p>
+      <form action="/delete?task={{task.key.id()}}&author={{task.author}}" method="post" style="display:inline;">
+        <input type="submit" value="X" />
+      </form>
+       {{ task.content }}
+    </p>
     {% endfor %}
     
     <form action="/addtask" method="post">

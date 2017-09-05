@@ -46,10 +46,18 @@ class MaybeTodo(webapp2.RequestHandler):
         if not user:
             self.redirect('/login')
             return
-        task = Task(parent=tasklist_key(user.user_id()))
-        task.author = user.user_id()
-        task.content = self.request.get('content')
-        task.put()
+        if self.request.path == '/addtask':
+            task = Task(parent=tasklist_key(user.user_id()))
+            task.author = user.user_id()
+            task.content = self.request.get('content')
+            task.put()
+        elif self.request.path == '/delete':
+            author_id = self.request.get('author')
+            if user.user_id() == author_id:
+                task_id = int(self.request.get('task'))
+                task_key = ndb.Key('MaybeTodo',author_id,'Task',task_id)
+                print task_key, task_key.get()
+                task_key.delete()
         self.redirect('/')
 
 class LoginPage(webapp2.RequestHandler):
@@ -64,5 +72,6 @@ class LoginPage(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([('/',MainPage),
                                ('/login', LoginPage),
-                               ('/addtask', MaybeTodo)],
+                               ('/addtask', MaybeTodo),
+                               ('/delete', MaybeTodo)],
                               debug=True)
