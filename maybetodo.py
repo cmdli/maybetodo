@@ -1,5 +1,6 @@
 
 import os
+import datetime
 
 from google.appengine.api import users
 from google.appengine.ext import ndb
@@ -20,7 +21,8 @@ class Task(ndb.Model):
     task_id = ndb.StringProperty(indexed=False)
     author = ndb.StringProperty(indexed=False)
     content = ndb.StringProperty(indexed=False)
-    date = ndb.DateTimeProperty(auto_now_add=True)
+    date = ndb.DateTimeProperty()
+    expiration = ndb.DateTimeProperty()
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
@@ -28,14 +30,19 @@ class MainPage(webapp2.RequestHandler):
         if not user:
             self.redirect("/login")
             return
-        tasklist_query = Task.query(ancestor=tasklist_key(user.user_id())).order(-Task.date)
+        tl_key = tasklist_key(user.user_id())
+        expired_task_keys = Task.query(Task.expiration < datetime.datetime.now(),
+                                       ancestor=tl_key).fetch(keys_only=True)
+        ndb.delete_multi(expired_task_keys)
+        
+        tasklist_query = Task.query(ancestor=tl_key).order(-Task.date)
         tasklist = tasklist_query.fetch()
         
         template = JINJA_ENVIRONMENT.get_template('index.html')
         logout_url = users.create_logout_url('/')
         template_params = {
-            'user_nickname' : user.nickname(),
-            'tasklist' : tasklist,
+            'user_nickname': user.nickname(),
+            'tasklist': tasklist,
             'logout_url': users.create_logout_url('/login')
         }
         self.response.write(template.render(template_params))
@@ -50,13 +57,14 @@ class MaybeTodo(webapp2.RequestHandler):
             task = Task(parent=tasklist_key(user.user_id()))
             task.author = user.user_id()
             task.content = self.request.get('content')
+            task.date = datetime.datetime.now()
+            task.expiration = task.date + datetime.timedelta(seconds=10)
             task.put()
         elif self.request.path == '/delete':
             author_id = self.request.get('author')
             if user.user_id() == author_id:
                 task_id = int(self.request.get('task'))
                 task_key = ndb.Key('MaybeTodo',author_id,'Task',task_id)
-                print task_key, task_key.get()
                 task_key.delete()
         self.redirect('/')
 

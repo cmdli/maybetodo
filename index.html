@@ -8,7 +8,7 @@
       <form action="/delete?task={{task.key.id()}}&author={{task.author}}" method="post" style="display:inline;">
         <input type="submit" value="X" />
       </form>
-       {{ task.content }}
+       <b>{{ task.content }}</b> Expiration: {{ task.expiration }}
     </p>
     {% endfor %}
     
