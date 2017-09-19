@@ -1,0 +1,11 @@
+body {
+    padding-top: 3rem;
+}
+
+.index {
+    padding: 3rem 1.5rem;
+}
+
+.task-input {
+    text-align: center;
+}

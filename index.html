@@ -1,21 +1,52 @@
 <!doctype html>
 <html>
+  <head>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/css/index.css" />
+  </head>
+  
   <body>
-    <p>Welcome to MaybeTodo, {{ user_nickname }}!</p>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+      <a class="navbar-brand" href="/">Maybe ToDo</a>
+      <div class="navbar-collapse collapse">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <span class="navbar-text">
+              {{ user_nickname }}
+            </span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link mx-2 btn btn-sm btn-outline-secondary" href="{{ logout_url|safe }}">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
     
-    {% for task in tasklist %}
-    <p>
-      <form action="/delete?task={{task.key.id()}}&author={{task.author}}" method="post" style="display:inline;">
-        <input type="submit" value="X" />
-      </form>
-       <b>{{ task.content }}</b> Expiration: {{ task.expiration }}
-    </p>
-    {% endfor %}
-    
-    <form action="/addtask" method="post">
-      <input value="" name="content">
-      <input type="submit" value="Add task">
-    </form>
-    <a href="{{ logout_url|safe }}">Logout</a>
+    <div class="container">
+      <div class="index">
+        <div class="row">
+          <h2>Tasks</h2>
+        </div>
+        <ul class="list-group">
+          {% for task in tasklist %}
+          <li class="list-group-item">
+            <form action="/delete?task={{task.key.id()}}&author={{task.author}}" method="post" style="display:inline;">
+              <button class="btn button-secondary btn-sm" type="submit">Delete</button>
+            </form>
+            <b>{{ task.content }}</b>
+            Expiration: {{ task.expiration }}
+          </li>
+        {% endfor %}
+        </ul>
+
+        <div class="task-input">
+          <form action="/addtask" method="post">
+            <input value="" name="content">
+            <input type="submit" value="Add task">
+          </form>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

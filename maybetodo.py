@@ -1,4 +1,4 @@
-
+z
 import os
 import datetime
 
@@ -58,7 +58,7 @@ class MaybeTodo(webapp2.RequestHandler):
             task.author = user.user_id()
             task.content = self.request.get('content')
             task.date = datetime.datetime.now()
-            task.expiration = task.date + datetime.timedelta(seconds=10)
+            task.expiration = task.date + datetime.timedelta(days=1)
             task.put()
         elif self.request.path == '/delete':
             author_id = self.request.get('author')
