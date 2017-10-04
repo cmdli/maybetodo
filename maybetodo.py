@@ -18,7 +18,6 @@ def tasklist_key(author_id):
 
 class Task(ndb.Model):
     """A model to represent one task on the ToDo"""
-    task_id = ndb.StringProperty(indexed=False)
     author = ndb.StringProperty(indexed=False)
     content = ndb.StringProperty(indexed=False)
     date = ndb.DateTimeProperty()
