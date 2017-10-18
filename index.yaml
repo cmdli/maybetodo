@@ -2,5 +2,11 @@ indexes:
 - kind: Task
   ancestor: yes
   properties:
+  - name: expiration
+    direction: desc
+
+- kind: Task
+  acnestor: yes
+  properties:
   - name: date
     direction: desc
