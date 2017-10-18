@@ -3,8 +3,6 @@ indexes:
   ancestor: yes
   properties:
   - name: expiration
-    direction: desc
-
 - kind: Task
   acnestor: yes
   properties:
